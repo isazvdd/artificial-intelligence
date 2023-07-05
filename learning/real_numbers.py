@@ -1,10 +1,15 @@
-import random
 import string
-import numpy as np
+import random
 import neuron
 
 # Caracteres para reconhecimento
 characters = string.digits + '-.'
+
+# Configuração do perceptron
+learning_rate = 0.01
+bias = 1.0
+num_epochs = 1000
+num_examples = 100
 
 # Função para gerar exemplos de treinamento
 def generate_training_data(num_examples):
@@ -15,15 +20,9 @@ def generate_training_data(num_examples):
         number = ''.join(random.choices(characters, k=12))
         inputs = [1.0 if char == '-' else 0.0 for char in number]
         training_set.append(inputs)
-        desired_set.append(1.0 if '.' in number else 0.0)
+        desired_set.append(1.0)
 
     return training_set, desired_set
-
-# Configuração do perceptron
-learning_rate = 0.01
-bias = 1.0
-num_epochs = 1000
-num_examples = 100
 
 # Gerar exemplos de treinamento
 X, Y = generate_training_data(num_examples)
@@ -33,9 +32,17 @@ perceptron = neuron.Perceptron(X, Y, learning_rate, bias)
 for _ in range(num_epochs):
     perceptron.learn()
 
-# Testar o perceptron
-test_examples = ['123', '-456', '7.89', '-0.12']
-for example in test_examples:
-    inputs = [1.0 if char == '-' else 0.0 for char in example]
-    prediction = perceptron.compute_output(inputs)
-    print(f"Input: {example}, Prediction: {prediction}")
+# Solicitar número ao usuário
+number = input("Digite um número: ")
+
+# Converter número em vetor de entrada para o perceptron
+inputs = [1.0 if char == '-' else 0.0 for char in number]
+
+# Fazer previsão usando o perceptron
+prediction = perceptron.compute_output(inputs)
+
+# Exibir resultado da previsão
+if prediction == 1.0:
+    print("O número é um número real.")
+else:
+    print("O número não é um número real.")
